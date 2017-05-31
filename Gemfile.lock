@@ -1,0 +1,44 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    faraday (0.12.1)
+      multipart-post (>= 1.2, < 3)
+    ffi (1.9.18)
+    listen (3.1.5)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+      ruby_dep (~> 1.2)
+    msgpack (1.1.0)
+    multi_json (1.12.1)
+    multipart-post (2.0.0)
+    mustermann (1.0.0)
+    presto-client (0.5.4)
+      faraday (~> 0.12)
+      msgpack (>= 0.7.0)
+      multi_json (~> 1.0)
+    rack (2.0.3)
+    rack-protection (2.0.0)
+      rack
+    rb-fsevent (0.9.8)
+    rb-inotify (0.9.8)
+      ffi (>= 0.5.0)
+    rerun (0.11.0)
+      listen (~> 3.0)
+    ruby_dep (1.5.0)
+    sinatra (2.0.0)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.0)
+      tilt (~> 2.0)
+    tilt (2.0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  presto-client!
+  rerun!
+  sinatra!
+
+BUNDLED WITH
+   1.13.7

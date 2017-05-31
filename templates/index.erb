@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Exalt SQL</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="/style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" integrity="sha256-xrr4HH5eSY+cFz4SH7ja/LaAi9qcEdjMpeMP49/iOLs=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-ruby.js" integrity="sha256-Y6A/v2tSYdbKt2dRpGU01Pxrh0MPPKdjnjDOmPwpZr0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.3/vue.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-8 offset-2">
+        <h1>Exalt SQL</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-8 offset-2">
+        <div id="editor"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-8 offset-2" id="run">
+        <button @click="run" type="button" class="btn btn-primary">{{ btnText }}</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12" id="result">
+        <result-table :data="tableData" :columns="tableColumns"></result-table>
+      </div>
+    </div>
+  </div>
+
+<script src="/app.js" ></script>
+</body>
+</html>

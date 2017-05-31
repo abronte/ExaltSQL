@@ -1,0 +1,14 @@
+#editor { 
+  width: 100%;
+  min-height: 350px;
+  border: 1px solid #ababab;
+}
+
+#run {
+  text-align: right;
+  padding-top: 10px;
+}
+
+#result {
+  padding-top: 10px;
+}
