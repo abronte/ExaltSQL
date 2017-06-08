@@ -3,3 +3,5 @@
   :language: English
   :user: presto
   :source: exalt
+
+:default_storage: "raptor"

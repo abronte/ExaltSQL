@@ -1,21 +1,17 @@
 $result_sets = []
 CHARS = ('a'..'z').to_a
 
-# memory: memory.default.exalt_
-# disk: raptor.default.exalt_
 class ResultSet
   attr_reader :query
   attr_reader :cols
   attr_reader :rows
   attr_reader :show_called
 
-  STORAGE = "memory.default.exalt_"
-  # STORAGE = "raptor.default.exalt_"
-
   def initialize(args={})
+    @storage = "#{$config[:default_storage]}.default.exalt_"
     @query = args[:query]
 
-    if @query.include? STORAGE
+    if @query.include? @storage
       @no_cache = true
     else
       @no_cache = args[:no_cache]
@@ -62,8 +58,7 @@ class ResultSet
   end
 
   def table
-    # @table ||= "#{STORAGE}_#{('a'..'z').to_a.shuffle[0,20].join}"
-    @table ||= "#{STORAGE}#{gen_table_name}"
+    @table ||= "#{@storage}#{gen_table_name}"
   end
 
   def show(num=10)
