@@ -49,6 +49,18 @@ class ResultSet
     end
   end
 
+  def each
+    @rows.each do |r|
+      row = {}
+
+      @cols.each_with_index do |c, idx|
+        row[c.to_sym] = r[idx]
+      end
+
+      yield row
+    end
+  end
+
   def table
     # @table ||= "#{STORAGE}_#{('a'..'z').to_a.shuffle[0,20].join}"
     @table ||= "#{STORAGE}#{gen_table_name}"
