@@ -6,6 +6,8 @@ require "presto-client"
 require_relative "lib/result_set"
 require_relative "lib/query"
 
+register Sinatra::Reloader
+
 $config = YAML.load_file("config.yml")
 $presto = Presto::Client.new($config[:presto])
 
@@ -19,12 +21,16 @@ end
 post "/run" do
   $result_sets = []
   payload = JSON.parse(request.body.read)
+  puts payload
 
   b = binding
-
-  eval(payload["code"], b)
-
   output = {}
+
+  begin
+    eval(payload["code"], b)
+  rescue Exception => e
+    output[:error] = e.to_s
+  end
 
   $result_sets.each do |rs|
     if rs.show_called

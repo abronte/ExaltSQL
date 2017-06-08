@@ -26,7 +26,7 @@ Vue.component('result-table', {
     data: Array
   },
   template: `
-  <table class="table">
+  <table class="table" v-if="data.length > 0">
     <thead>
       <tr>
         <th v-for="key in columns">
@@ -44,11 +44,29 @@ Vue.component('result-table', {
   </table>`
 });
 
+Vue.component('result-error', {
+  props: {
+    error: String
+  },
+  template: `
+  <pre class="alert alert-danger" v-if="error">
+  {{ error }}
+  </pre>
+  `
+});
+
 var resultTable = new Vue({
   el: '#result',
   data: {
     tableColumns: [],
     tableData: []
+  }
+});
+
+var resultError = new Vue({
+  el: '#error',
+  data: {
+    errorData: undefined
   }
 });
 
@@ -74,8 +92,14 @@ var runBtn = new Vue({
           console.log(resp);
           self.btnText = 'Run';
 
-          resultTable.tableColumns = resp['show']['cols'];
-          resultTable.tableData = resp['show']['rows'];
+          if (resp['error']) {
+            resultTable.tableData = [];
+            resultError.errorData = resp['error'];
+          } else {
+            resultError.errorData = undefined;
+            resultTable.tableColumns = resp['show']['cols'];
+            resultTable.tableData = resp['show']['rows'];
+          }
         }
       });
     }
