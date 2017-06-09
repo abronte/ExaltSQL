@@ -16,20 +16,26 @@
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-8 offset-2">
+      <div class="col-10 offset-1">
         <h1>Exalt SQL</h1>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-8 offset-2">
+      <div class="col-10 offset-1">
         <div id="editor"></div>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-8 offset-2" id="run">
+      <div class="col-10 offset-1" id="run">
         <button @click="run" type="button" class="btn btn-primary">{{ btnText }}</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12" id="error">
+        <result-error :error="errorData"></result-error>
       </div>
     </div>
 
@@ -40,8 +46,8 @@
     </div>
 
     <div class="row">
-      <div class="col-12" id="error">
-        <result-error :error="errorData"></result-error>
+      <div class="col-12" id="stdout">
+        <result-stdout :stdout="stdoutData"></result-stdout>
       </div>
     </div>
   </div>

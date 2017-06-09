@@ -24,7 +24,22 @@ post "/run" do
   output = {}
 
   begin
-    eval(payload["code"], b)
+    code = %{
+      begin $stdout = StringIO.new;
+      #{payload["code"]}
+      $stdout.string;
+      ensure $stdout = STDOUT end
+    }
+
+    puts "<<< BEGIN CODE >>>"
+    puts code
+    puts "<<< END CODE >>>"
+
+    output[:stdout] = eval(code, b)
+
+    puts "<<< BEGIN OUTPUT >>>"
+    puts output[:stdout]
+    puts "<<< END OUTPUT >>>"
   rescue Exception => e
     output[:error] = e.to_s
   end

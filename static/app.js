@@ -55,6 +55,14 @@ Vue.component('result-error', {
   `
 });
 
+Vue.component('result-stdout', {
+  props: {
+    stdout: String
+  },
+  template: '<pre v-if="stdout">{{ stdout }}</pre>'
+});
+
+
 var resultTable = new Vue({
   el: '#result',
   data: {
@@ -70,14 +78,29 @@ var resultError = new Vue({
   }
 });
 
+var resultStdout = new Vue({
+  el: '#stdout',
+  data: {
+    stdoutData: undefined
+  }
+});
+
 var runBtn = new Vue({
   el: '#run',
   data: {
     btnText: 'Run'
   },
   methods: {
+    resetOutput: function() {
+      console.log('reseting output');
+
+      resultTable.tableData = [];
+      resultError.errorData = undefined;
+      resultStdout.stdoutData = undefined;
+    },
     run: function(event) {
       self = this;
+      self.resetOutput();
       self.btnText = 'Running...';
       code = editor.getValue();
 
@@ -93,14 +116,15 @@ var runBtn = new Vue({
           self.btnText = 'Run';
 
           if (resp['error']) {
-            resultTable.tableData = [];
             resultError.errorData = resp['error'];
           } else {
-            resultError.errorData = undefined;
-
-            if (resp['show']['cols']) {
+            if (resp['show']) {
               resultTable.tableColumns = resp['show']['cols'];
               resultTable.tableData = resp['show']['rows'];
+            }
+
+            if (resp['stdout']) {
+              resultStdout.stdoutData = resp['stdout'];
             }
           }
         }
