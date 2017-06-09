@@ -34,15 +34,7 @@ class ResultSet
 
     puts query
 
-    cols, @rows = $presto.run(query)
-
-    puts @rows
-
-    @cols = []
-
-    cols.each do |c|
-      @cols << c.name
-    end
+    $presto.run(query)
   end
 
   def each
@@ -62,6 +54,15 @@ class ResultSet
   end
 
   def show(num=10)
+    cols, rows = $presto.run(query)
+
+    @rows = rows[0..num-1]
+    @cols = []
+
+    cols.each do |c|
+      @cols << c.name
+    end
+
     @show_called = true
   end
 

@@ -97,8 +97,11 @@ var runBtn = new Vue({
             resultError.errorData = resp['error'];
           } else {
             resultError.errorData = undefined;
-            resultTable.tableColumns = resp['show']['cols'];
-            resultTable.tableData = resp['show']['rows'];
+
+            if (resp['show']['cols']) {
+              resultTable.tableColumns = resp['show']['cols'];
+              resultTable.tableData = resp['show']['rows'];
+            }
           }
         }
       });
