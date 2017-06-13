@@ -11,6 +11,7 @@ data.show()`);
 
 editor.clearSelection();
 editor.navigateFileEnd();
+editor.getSession().setUseWrapMode(true);
 
 editor.commands.addCommand({
   name: 'run',
