@@ -1,9 +1,9 @@
-require 'stringio'
 require "yaml"
 require "sinatra"
 require "presto-client"
 require_relative "lib/result_set"
 require_relative "lib/query"
+require_relative "lib/job_manager"
 
 $config = YAML.load_file("config.yml")
 $presto = Presto::Client.new($config[:presto])
@@ -20,33 +20,23 @@ post "/run" do
   payload = JSON.parse(request.body.read)
   puts payload
 
-  b = binding
-  output = {}
+  JobManager.run(payload)
 
-  begin
-    code = %{
-      begin $stdout = StringIO.new;
-      #{payload["code"]}
-      $stdout.string;
-      ensure $stdout = STDOUT end
-    }
+  {result: "OK"}.to_json
+end
 
-    puts "<<< BEGIN CODE >>>"
-    puts code
-    puts "<<< END CODE >>>"
+get "/check" do
+  output = {running: false}
 
-    output[:stdout] = eval(code, b)
+  if JobManager.running?
+    output[:running] = true
+  elsif !JobManager.running?
+    output = output.merge(JobManager.output)
 
-    puts "<<< BEGIN OUTPUT >>>"
-    puts output[:stdout]
-    puts "<<< END OUTPUT >>>"
-  rescue Exception => e
-    output[:error] = e.to_s
-  end
-
-  $result_sets.each do |rs|
-    if rs.show_called
-      output[:show] = {cols: rs.cols, rows: rs.rows}
+    $result_sets.each do |rs|
+      if rs.show_called
+        output[:show] = {cols: rs.cols, rows: rs.rows}
+      end
     end
   end
 

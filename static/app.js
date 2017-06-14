@@ -89,23 +89,75 @@ var resultStdout = new Vue({
 var runBtn = new Vue({
   el: '#run',
   data: {
-    btnText: 'Run'
+    btnText: 'Run',
+    has_result: false,
+    submitted: false
+  },
+  created: function() {
+    this.check();
   },
   methods: {
     resetOutput: function() {
-      console.log('reseting output');
-
       resultTable.tableData = [];
       resultError.errorData = undefined;
       resultStdout.stdoutData = undefined;
     },
+    displayResp: function(resp) {
+      this.btnText = 'Run';
+      this.submitted = false;
+
+      if (resp['error']) {
+        resultError.errorData = resp['error'];
+      } else {
+        if (resp['show']) {
+          resultTable.tableColumns = resp['show']['cols'];
+          resultTable.tableData = resp['show']['rows'];
+        }
+
+        if (resp['stdout']) {
+          resultStdout.stdoutData = resp['stdout'];
+        }
+      }
+
+      self.has_result = false;
+    },
+    check: function() {
+      console.log('Checking...');
+
+      self = this;
+
+      if (!self.has_result) {
+        $.ajax('/check', {
+          contentType : 'application/json',
+          dataType: 'JSON',
+          type : 'GET',
+          success: function(resp) {
+            console.log(resp);
+
+            if (resp['running']) {
+              self.btnText = 'Running...';
+              setTimeout(self.check, 1000);
+            } else {
+              self.has_result = true;
+              self.displayResp(resp);
+            }
+          }
+        });
+      }
+    },
     run: function(event) {
       self = this;
+
+      if (self.submitted) {
+        return
+      }
+
       self.resetOutput();
       self.btnText = 'Running...';
+      self.submitted = true;
       code = editor.getValue();
 
-      console.log('Run from view: '+code);
+      console.log('Running: '+code);
 
       $.ajax('/run', {
         data : JSON.stringify({'code': code}),
@@ -114,20 +166,7 @@ var runBtn = new Vue({
         type : 'POST',
         success: function(resp) {
           console.log(resp);
-          self.btnText = 'Run';
-
-          if (resp['error']) {
-            resultError.errorData = resp['error'];
-          } else {
-            if (resp['show']) {
-              resultTable.tableColumns = resp['show']['cols'];
-              resultTable.tableData = resp['show']['rows'];
-            }
-
-            if (resp['stdout']) {
-              resultStdout.stdoutData = resp['stdout'];
-            }
-          }
+          self.check();
         }
       });
     }
